@@ -17,10 +17,10 @@
 			<div class="game-container">
 				<div ng-repeat="row in level track by $index" class="row-{{$index}}">
 					<div ng-repeat="square in row track by $index">
-						<div ng-show="square === 1" class="white dot small col-1 col-{{$index}}-start"></div>
-						<div ng-show="square === 2" class="white dot large col-1 col-{{$index}}-start"></div>
-						<div ng-show="square === 3" class="blue block col-1 col-{{$index}}-start"></div>
-						<div ng-show="square === 4" class="red block gate col-1 col-{{$index}}-start"></div>
+						<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 1" class="white dot small col-1 col-{{$index}}-start"></div>
+						<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 2" class="white dot large col-1 col-{{$index}}-start"></div>
+						<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 3" class="blue block col-1 col-{{$index}}-start"></div>
+						<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 4" class="red block gate col-1 col-{{$index}}-start"></div>
 					</div>
 				</div>
 			</div>
