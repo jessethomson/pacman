@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pac Man</title>
+	<!-- styles -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./css/styles.css">
+	<!-- scripts -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" type="text/javascript"></script>
+	<script src="./js/app.js" type="text/javascript"></script>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body ng-app="myApp">
+	<div ng-controller="gameCtrl" class="container">
+		<div style="height: 5%;"></div>
+		<div class="col-md-12" style="height:90%;" ng-keyup="keyup($event)" ng-click="keyup()">
+			<div class="game-container">
+				<!-- <img class="background" src="./img/level-background.jpg" alt="level background"> -->
+				<div class="row-0">
+					<div class="blue block col-19"></div>
+				</div>
+				<div class="row-1">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-1 col-9-start"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[1] track by $index">
+				</div>
+				<div class="row-2">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-2 col-2-start"></div>
+					<div class="blue block col-3 col-5-start"></div>
+					<div class="blue block col-1 col-9-start"></div>
+					<div class="blue block col-3 col-11-start"></div>
+					<div class="blue block col-2 col-15-start"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[2] track by $index">
+				</div>
+				<div class="row-3">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[3] track by $index">
+					</div>
+				</div>
+				<div class="row-4">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-2 col-2-start"></div>
+					<div class="blue block col-1 col-5-start"></div>
+					<div class="blue block col-5 col-7-start"></div>
+					<div class="blue block col-1 col-13-start"></div>
+					<div class="blue block col-2 col-15-start"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[4] track by $index">
+				</div>
+				<div class="row-5">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-1 col-5-start"></div>
+					<div class="blue block col-1 col-9-start"></div>
+					<div class="blue block col-1 col-13-start"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[5] track by $index">
+				</div>
+				<div class="row-6">
+					<div class="blue block col-4"></div>
+					<div class="blue block col-3 col-5-start"></div>
+					<div class="blue block col-1 col-9-start"></div>
+					<div class="blue block col-3 col-11-start"></div>
+					<div class="blue block col-4 col-15-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[6] track by $index">
+				</div>
+				<div class="row-7">
+					<div class="blue block col-1 col-3-start"></div>
+					<div class="blue block col-1 col-5-start"></div>
+					<div class="blue block col-1 col-13-start"></div>
+					<div class="blue block col-1 col-15-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[7] track by $index">
+				</div>
+				<div class="row-8">
+					<div class="blue block col-4"></div>
+					<div class="blue block col-1 col-5-start"></div>
+					<div class="blue block col-2 col-7-start"></div>
+					<div class="red block col-1 col-9-start" style="height:10px;"></div>
+					<div class="blue block col-2 col-10-start"></div>
+					<div class="blue block col-1 col-13-start"></div>
+					<div class="blue block col-4 col-15-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[8] track by $index">
+				</div>
+				<div class="row-9">
+					<div class="blue block col-1 col-7-start"></div>
+					<div class="blue block col-1 col-11-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[9] track by $index">
+				</div>
+				<div class="row-10">
+					<div class="blue block col-4"></div>
+					<div class="blue block col-1 col-5-start"></div>
+					<div class="blue block col-5 col-7-start"></div>
+					<div class="blue block col-1 col-13-start"></div>
+					<div class="blue block col-4 col-15-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[10] track by $index">
+				</div>
+				<div class="row-11">
+					<div class="blue block col-1 col-3-start"></div>
+					<div class="blue block col-1 col-5-start"></div>
+					<div class="blue block col-1 col-13-start"></div>
+					<div class="blue block col-1 col-15-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[11] track by $index">
+				</div>
+				<div class="row-12">
+					<div class="blue block col-4"></div>
+					<div class="blue block col-1 col-5-start"></div>
+					<div class="blue block col-5 col-7-start"></div>
+					<div class="blue block col-1 col-13-start"></div>
+					<div class="blue block col-4 col-15-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[12] track by $index">
+				</div>
+				<div class="row-13">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-1 col-9-start"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[13] track by $index">
+				</div>
+				<div class="row-14">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-2 col-2-start"></div>
+					<div class="blue block col-3 col-5-start"></div>
+					<div class="blue block col-1 col-9-start"></div>
+					<div class="blue block col-3 col-11-start"></div>
+					<div class="blue block col-2 col-15-start"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[14] track by $index">
+				</div>
+				<div class="row-15">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-1 col-3-start"></div>
+					<div class="blue block col-1 col-15-start"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[15] track by $index">
+				</div>
+				<div class="row-16">
+					<div class="blue block col-2"></div>
+					<div class="blue block col-1 col-3-start"></div>
+					<div class="blue block col-1 col-5-start"></div>
+					<div class="blue block col-5 col-7-start"></div>
+					<div class="blue block col-1 col-13-start"></div>
+					<div class="blue block col-1 col-15-start"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[16] track by $index">
+				</div>
+				<div class="row-17">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-1 col-5-start"></div>
+					<div class="blue block col-1 col-9-start"></div>
+					<div class="blue block col-1 col-13-start"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[17] track by $index">
+				</div>
+				<div class="row-18">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-6 col-2-start"></div>
+					<div class="blue block col-1 col-9-start"></div>
+					<div class="blue block col-6 col-11-start"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[18] track by $index">
+				</div>
+				<div class="row-19">
+					<div class="blue block col-1"></div>
+					<div class="blue block col-1 col-18-start"></div>
+					<!-- dots -->
+					<div ng-show="dot === 0" class="white dot col-1 col-{{$index}}-start" ng-repeat="dot in level[19] track by $index">
+				</div>
+				<div class="row-20">
+					<div class="blue block col-19"></div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</body>
+</html>
