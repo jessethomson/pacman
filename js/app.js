@@ -2,33 +2,48 @@ var app = angular.module('myApp', []);
 
 app.controller('gameCtrl', function($scope, $document) {
 
-	// 0 = dot
-	// 1 = wall
-	// 2 = gate
-	// 3 = nothing
+	// 0 = empty
+	// 1 = small dot
+	// 2 = large dot
+	// 3 = wall
+	// 4 = nodown gate
 	$scope.level = [
-		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
-		[1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-		[1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
-		[3, 3, 3, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 3, 3, 3],
-		[1, 1, 1, 1, 0, 1, 0, 1, 1, 2, 1, 1, 0, 1, 0, 1, 1, 1, 1],
-		[1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1], // temporarily blocked
-		[1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1],
-		[3, 3, 3, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 3, 3, 3],
-		[1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
-		[1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-		[1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1],
-		[1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-		[1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+		[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+		[3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+		[3, 2, 3, 3, 1, 3, 3, 3, 1, 3, 1, 3, 3, 3, 1, 3, 3, 2, 3],
+		[3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+		[3, 1, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 1, 3],
+		[3, 1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 3],
+		[3, 3, 3, 3, 1, 3, 3, 3, 1, 3, 1, 3, 3, 3, 1, 3, 3, 3, 3],
+		[0, 0, 0, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 0, 0, 0],
+		[3, 3, 3, 3, 1, 3, 1, 3, 3, 4, 3, 3, 1, 3, 1, 3, 3, 3, 3],
+		[3, 1, 1, 1, 1, 1, 1, 3, 0, 0, 0, 3, 1, 1, 1, 1, 1, 1, 3], // temporarily blocked
+		[3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3],
+		[0, 0, 0, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 0, 0, 0],
+		[3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3],
+		[3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+		[3, 2, 3, 3, 1, 3, 3, 3, 1, 3, 1, 3, 3, 3, 1, 3, 3, 2, 3],
+		[3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3],
+		[3, 3, 1, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 1, 1, 3],
+		[3, 1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 3],
+		[3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3],
+		[3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+		[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
 	];
+
+	function countLevelElements(type) {
+		var total = 0;
+		for(var i=0; i<$scope.level.length; i++) {
+			for(var j=0; j<$scope.level[i].length; j++) {
+				if($scope.level[i][j] === type) {
+					total++
+				}
+			}
+		}
+		return total;
+	}
+
+	console.log("total small dots: " + countLevelElements(1));
 
 	$scope.pacman = {};
 	$scope.ghosts = [];
@@ -152,16 +167,16 @@ app.controller('gameCtrl', function($scope, $document) {
 	function getRandomMoveState(character) {
 		var level = $scope.level;
 		possibleMoveStates = [];
-		if(level[character.y - 1][character.x] !== 1) {
+		if(level[character.y - 1][character.x] !== 3) {
 			possibleMoveStates.push("up");
 		}
-		if(level[character.y + 1][character.x] !== 1 && level[character.y + 1][character.x] !== 2) {
+		if(level[character.y + 1][character.x] !== 3 && level[character.y + 1][character.x] !== 4) {
 			possibleMoveStates.push("down");
 		}
-		if(level[character.y][character.x - 1] !== 1) {
+		if(level[character.y][character.x - 1] !== 3) {
 			possibleMoveStates.push("left");
 		}
-		if(level[character.y][character.x + 1] !== 1) {
+		if(level[character.y][character.x + 1] !== 3) {
 			possibleMoveStates.push("right");
 		}
 		var index = Math.floor((Math.random() * possibleMoveStates.length));
@@ -177,34 +192,46 @@ app.controller('gameCtrl', function($scope, $document) {
 		var element = $("#" + character.id);
 		switch(character.moveState) {
 			case "up":
-				if(level[character.y - 1][character.x] !== 1) {
+				if(level[character.y - 1][character.x] !== 3) {
 					character.y -= 1;
 					var top = parseInt(element.css("top"));
 					element.css("top", top - grid + "px");
+					if(character.id === "pacman") {
+						$scope.level[character.y][character.x] = 0; //scope not updating
+					}
 					moved = true;					
 				}
 				break;
 			case "down":
-				if(level[character.y + 1][character.x] !== 1 && level[character.y + 1][character.x] !== 2) {
+				if(level[character.y + 1][character.x] !== 3 && level[character.y + 1][character.x] !== 4) {
 					character.y += 1;
 					var top = parseInt(element.css("top"));
 					element.css("top", top + grid + "px");
+					if(character.id === "pacman") {
+						$scope.level[character.y][character.x] = 0; //scope not updating
+					}
 					moved = true;
 				}
 				break;
 			case "left":
-				if(level[character.y][character.x - 1] !== 1) {
+				if(level[character.y][character.x - 1] !== 3) {
 					character.x -= 1;
 					var left = parseInt(element.css("left"));
 					element.css("left", left - grid + "px");
+					if(character.id === "pacman") {
+						$scope.level[character.y][character.x] = 0; //scope not updating
+					}
 					moved = true;
 				}
 				break;
 			case "right":
-				if(level[character.y][character.x + 1] !== 1) {
+				if(level[character.y][character.x + 1] !== 3) {
 					character.x += 1;
 					var left = parseInt(element.css("left"));
 					element.css("left", left + grid + "px");
+					if(character.id === "pacman") {
+						$scope.level[character.y][character.x] = 0; //scope not updating
+					}
 					moved = true;
 				}
 				break;
