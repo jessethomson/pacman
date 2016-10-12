@@ -55,19 +55,19 @@ app.controller('gameCtrl', function($scope, $document) {
 			switch (event.key) {
 				case "ArrowLeft":
 					$scope.pacman.moveState = "left";
-					$("#pacman").attr("src", "./img/pacman-left.png");
+					$("#pacman").attr("src", "./img/pacman-left.gif");
 					break;
 				case "ArrowRight":
 					$scope.pacman.moveState = "right";
-					$("#pacman").attr("src", "./img/pacman-right.png");
+					$("#pacman").attr("src", "./img/pacman-right.gif");
 					break;
 				case "ArrowUp":
 					$scope.pacman.moveState = "up";
-					$("#pacman").attr("src", "./img/pacman-up.png");
+					$("#pacman").attr("src", "./img/pacman-up.gif");
 					break;
 				case "ArrowDown":
 					$scope.pacman.moveState = "down";
-					$("#pacman").attr("src", "./img/pacman-down.png");
+					$("#pacman").attr("src", "./img/pacman-down.gif");
 					break;
 				case " ":
 					if(!$scope.playing) {
@@ -105,10 +105,10 @@ app.controller('gameCtrl', function($scope, $document) {
 
 		generatePacman();
 		for(var j=0; j<numGhosts; j++) {
-			generateGhost();
+			generateGhost(j + 1);
 		}
 
-		setInterval(function() {
+		var gameInterval = setInterval(function() {
 			if($scope.playing) {
 				
 				updateCharacter($scope.pacman);
@@ -128,7 +128,8 @@ app.controller('gameCtrl', function($scope, $document) {
 					// check for collision
 					if(collision($scope.ghosts[i].id, $scope.pacman.id)) {
 						console.log("hit!!");
-						// pacman dies
+                        clearInterval(gameInterval);
+						playerDeath()
 						// gameOver
 					}
 				}
@@ -142,7 +143,7 @@ app.controller('gameCtrl', function($scope, $document) {
 		$(".game-container").append(characterDiv);
 	}
 
-	function generateGhost() {
+	function generateGhost(ghostNumber) {
 
 		var numSeconds = Math.floor((Math.random() * 4) + 2);
 
@@ -150,7 +151,7 @@ app.controller('gameCtrl', function($scope, $document) {
 			var id = "ghost" + $scope.ghosts.length;
 			var ghost = {
 				id: id,
-				img: "ghost1.gif",
+				img: "ghost" + ghostNumber + ".gif",
 				x: 9,
 				y: 9,
 				moveState: "up"
@@ -263,6 +264,14 @@ app.controller('gameCtrl', function($scope, $document) {
 		return moved;
 	}
 
+    function playerDeath() {
+        setTimeout(function() {
+            //$("#pacman").attr("src", "");
+            $document[0].onkeyup = null;
+        }, 1000);
+        $("#pacman").attr("src", "./img/pacmandie.gif");
+    }
+    
 	function collision(name1, name2) {
 
 		var thing1 = $("#" + name1);
