@@ -2,34 +2,53 @@ var app = angular.module('myApp', []);
 
 app.controller('gameCtrl', function($scope, $document) {
 
-	// 0 = empty
-	// 1 = small dot
-	// 2 = large dot
-	// 3 = wall
-	// 4 = nodown gate
-	$scope.level = [
-		[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-		[3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-		[3, 2, 3, 3, 1, 3, 3, 3, 1, 3, 1, 3, 3, 3, 1, 3, 3, 2, 3],
-		[3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-		[3, 1, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 1, 3],
-		[3, 1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 3],
-		[3, 3, 3, 3, 1, 3, 3, 3, 1, 3, 1, 3, 3, 3, 1, 3, 3, 3, 3],
-		[0, 0, 0, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 0, 0, 0],
-		[3, 3, 3, 3, 1, 3, 1, 3, 3, 4, 3, 3, 1, 3, 1, 3, 3, 3, 3],
-		[1, 1, 1, 1, 1, 1, 1, 3, 0, 0, 0, 3, 1, 1, 1, 1, 1, 1, 1], // temporarily blocked
-		[3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3],
-		[0, 0, 0, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 0, 0, 0],
-		[3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3],
-		[3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-		[3, 2, 3, 3, 1, 3, 3, 3, 1, 3, 1, 3, 3, 3, 1, 3, 3, 2, 3],
-		[3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3],
-		[3, 3, 1, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 1, 1, 3],
-		[3, 1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 3],
-		[3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3],
-		[3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-		[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
-	];
+	$scope.pacman = {};
+	$scope.ghosts = [];
+	var grid = 25;
+	var numGhosts = 4;
+	$scope.playing = false;
+
+	function resetGame() {
+
+		// remove old characters
+		removeGhosts();
+		$("#pacman").remove();
+
+		// show all dots
+		$(".dot").show();
+
+		// reset level //
+		// 0 = empty
+		// 1 = small dot
+		// 2 = large dot
+		// 3 = wall
+		// 4 = nodown gate
+		$scope.level = [
+			[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+			[3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+			[3, 2, 3, 3, 1, 3, 3, 3, 1, 3, 1, 3, 3, 3, 1, 3, 3, 2, 3],
+			[3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+			[3, 1, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 1, 3],
+			[3, 1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 3],
+			[3, 3, 3, 3, 1, 3, 3, 3, 1, 3, 1, 3, 3, 3, 1, 3, 3, 3, 3],
+			[0, 0, 0, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 0, 0, 0],
+			[3, 3, 3, 3, 1, 3, 1, 3, 3, 4, 3, 3, 1, 3, 1, 3, 3, 3, 3],
+			[1, 1, 1, 1, 1, 1, 1, 3, 0, 0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+			[3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3],
+			[0, 0, 0, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 0, 0, 0],
+			[3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3],
+			[3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+			[3, 2, 3, 3, 1, 3, 3, 3, 1, 3, 1, 3, 3, 3, 1, 3, 3, 2, 3],
+			[3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3],
+			[3, 3, 1, 3, 1, 3, 1, 3, 3, 3, 3, 3, 1, 3, 1, 3, 1, 1, 3],
+			[3, 1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 3],
+			[3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3],
+			[3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+			[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+		];
+
+		$scope.totalSmallDots = countLevelElements(1);
+	}
 
 	function countLevelElements(type) {
 		var total = 0;
@@ -43,38 +62,36 @@ app.controller('gameCtrl', function($scope, $document) {
 		return total;
 	}
 
-	console.log("total small dots: " + countLevelElements(1));
-
-	$scope.pacman = {};
-	$scope.ghosts = [];
-	var grid = 25;
-	var numGhosts = 4;
-	$scope.playing = false;
 
 	$document[0].onkeyup = function(event) {
 			switch (event.key) {
 				case "ArrowLeft":
-					$scope.pacman.moveState = "left";
-					$("#pacman").attr("src", "./img/pacman-left.gif");
+					if($scope.playing) {
+						$scope.pacman.moveState = "left";
+						$("#pacman").attr("src", "./img/pacman-left.gif");
+					}
 					break;
 				case "ArrowRight":
-					$scope.pacman.moveState = "right";
-					$("#pacman").attr("src", "./img/pacman-right.gif");
+					if($scope.playing) {
+						$scope.pacman.moveState = "right";
+						$("#pacman").attr("src", "./img/pacman-right.gif");
+					}
 					break;
 				case "ArrowUp":
-					$scope.pacman.moveState = "up";
-					$("#pacman").attr("src", "./img/pacman-up.gif");
+					if($scope.playing) {
+						$scope.pacman.moveState = "up";
+						$("#pacman").attr("src", "./img/pacman-up.gif");
+					}
 					break;
 				case "ArrowDown":
-					$scope.pacman.moveState = "down";
-					$("#pacman").attr("src", "./img/pacman-down.gif");
+					if($scope.playing) {
+						$scope.pacman.moveState = "down";
+						$("#pacman").attr("src", "./img/pacman-down.gif");
+					}
 					break;
 				case " ":
 					if(!$scope.playing) {
 						$scope.startGame();
-					}
-					else {
-						$scope.playing = false;
 					}
 					break;
 				default:
@@ -86,7 +103,7 @@ app.controller('gameCtrl', function($scope, $document) {
 
 		$scope.pacman = {
 			id: "pacman",
-			img: "pacman-right.png",
+			img: "pacman-right.gif",
 			x: 9,
 			y: 15
 		}
@@ -99,8 +116,22 @@ app.controller('gameCtrl', function($scope, $document) {
 		pacman.css("top", $scope.pacman.y * 25 + "px");
 	}
 
+	function checkForWinner(callback) {
+		if(!$scope.totalSmallDots) {
+			callback();
+		}
+	}
+
 	$scope.startGame = function() {
 
+		$(".game-over").hide();
+		$(".winner").hide();
+		resetGame();
+
+		playAudio("pacman-beginning");
+		$("#pacman-beginning").bind("ended", function() {
+			playAudio("pacman-chomp");
+		});
 		$scope.playing = true; 
 
 		generatePacman();
@@ -118,7 +149,7 @@ app.controller('gameCtrl', function($scope, $document) {
 					if(!updateCharacter($scope.ghosts[i])) {
 						$scope.ghosts[i].moveState = getRandomMoveState($scope.ghosts[i]);
 					}
-					else { // 50/50 chance that he randomly switches directions
+					else { // 25/75 chance that he randomly switches directions
 						var coinFlip = Math.floor((Math.random() * 4));
 						if(coinFlip === 0) {
 							$scope.ghosts[i].moveState = getRandomMoveState($scope.ghosts[i]);
@@ -127,13 +158,26 @@ app.controller('gameCtrl', function($scope, $document) {
 
 					// check for collision
 					if(collision($scope.ghosts[i].id, $scope.pacman.id)) {
-						console.log("hit!!");
-                        clearInterval(gameInterval);
-						playerDeath()
-						// gameOver
+						if(!$scope.superpower) {
+							$scope.playing = false;
+							stopAudio("pacman-chomp");
+							playAudio("pacman-death");
+							clearInterval(gameInterval);
+							$("#pacman").attr("src", "./img/pacmandie.gif");
+							$(".game-over").show();
+						}
+						else {
+							$("#" + $scope.ghosts[i].id).remove();
+							//generateGhost()
+						}
 					}
 				}
-
+				checkForWinner(function() {
+					$scope.playing = false;
+					stopAudio("pacman-chomp");
+					clearInterval(gameInterval);
+					$(".winner").show();
+				});
 			}
 		}, 250);
 	}
@@ -143,7 +187,14 @@ app.controller('gameCtrl', function($scope, $document) {
 		$(".game-container").append(characterDiv);
 	}
 
-	function generateGhost(ghostNumber) {
+	function removeGhosts() {
+		for(var i=0; i<$scope.ghosts.length; i++) {
+			$("#" + $scope.ghosts[i].id).remove();
+		}
+		$scope.ghosts = [];
+	}
+
+	function generateGhost(ghostNumber, ghost) {
 
 		var numSeconds = Math.floor((Math.random() * 4) + 2);
 
@@ -195,16 +246,29 @@ app.controller('gameCtrl', function($scope, $document) {
 		var level = $scope.level;
 		var moved = false;
 		var element = $("#" + character.id);
+
+		// if eating small dot
+		if(character.id === "pacman" && $scope.level[character.y][character.x] === 1) {
+			$scope.level[character.y][character.x] = 0;
+			$("." + character.y + "-" + character.x).hide();
+			$scope.totalSmallDots--;
+		}
+		// if eating large dot
+		if(character.id === "pacman" && $scope.level[character.y][character.x] === 2) {
+			$scope.level[character.y][character.x] = 0;
+			$("." + character.y + "-" + character.x).hide();
+			$scope.superpower = true;
+			setTimeout(function() {
+				$scope.superpower = false;
+			}, 8000);
+		}
+
 		switch(character.moveState) {
 			case "up":
 				if(level[character.y - 1][character.x] !== 3) {
 					character.y -= 1;
 					var top = parseInt(element.css("top"));
 					element.css("top", top - grid + "px");
-					if(character.id === "pacman") {
-						$scope.level[character.y][character.x] = 0; //scope not updating
-						$("#" + character.y + "-" + character.x).remove();
-					}
 					moved = true;					
 				}
 				break;
@@ -213,10 +277,6 @@ app.controller('gameCtrl', function($scope, $document) {
 					character.y += 1;
 					var top = parseInt(element.css("top"));
 					element.css("top", top + grid + "px");
-					if(character.id === "pacman") {
-						$scope.level[character.y][character.x] = 0;
-						$("#" + character.y + "-" + character.x).remove();
-					}
 					moved = true;
 				}
 				break;
@@ -224,7 +284,6 @@ app.controller('gameCtrl', function($scope, $document) {
 				if(level[character.y][character.x - 1] !== 3) {
 					var left = parseInt(element.css("left"));
 					if(character.y === 9 && character.x === 0) {
-						console.log("magic!!!");
 						character.x = 18;
 						element.css("left", left + grid*18 + "px");
 					}
@@ -232,10 +291,6 @@ app.controller('gameCtrl', function($scope, $document) {
 						character.x -= 1;
 						element.css("left", left - grid + "px");
 						
-					}
-					if(character.id === "pacman") {
-						$scope.level[character.y][character.x] = 0;
-						$("#" + character.y + "-" + character.x).remove();
 					}
 					moved = true;
 				}
@@ -251,10 +306,6 @@ app.controller('gameCtrl', function($scope, $document) {
 						character.x += 1;
 						element.css("left", left + grid + "px");
 					}
-					if(character.id === "pacman") {
-						$scope.level[character.y][character.x] = 0;
-						$("#" + character.y + "-" + character.x).remove();
-					}
 					moved = true;
 				}
 				break;
@@ -263,14 +314,6 @@ app.controller('gameCtrl', function($scope, $document) {
 		}
 		return moved;
 	}
-
-    function playerDeath() {
-        setTimeout(function() {
-            //$("#pacman").attr("src", "");
-            $document[0].onkeyup = null;
-        }, 1000);
-        $("#pacman").attr("src", "./img/pacmandie.gif");
-    }
     
 	function collision(name1, name2) {
 
@@ -280,18 +323,20 @@ app.controller('gameCtrl', function($scope, $document) {
 			return false;
 		}
 
+		return thing1.css("top") === thing2.css("top") && thing1.css("left") === thing2.css("left");
+
 		var r1 = {
 			top: parseInt(thing1.css("top")),
-			bottom: parseInt(thing1.css("top")) + grid,
+			bottom: parseInt(thing1.css("top")) + grid-5,
 			left: parseInt(thing1.css("left")),
-			right: parseInt(thing1.css("left")) + grid
+			right: parseInt(thing1.css("left")) + grid-5
 		};
 
 		var r2 = {
 			top: parseInt(thing2.css("top")),
-			bottom: parseInt(thing2.css("top")) + grid,
+			bottom: parseInt(thing2.css("top")) + grid-5,
 			left: parseInt(thing2.css("left")),
-			right: parseInt(thing2.css("left")) + grid
+			right: parseInt(thing2.css("left")) + grid-5
 		};
 
 
@@ -303,6 +348,15 @@ app.controller('gameCtrl', function($scope, $document) {
 		return result;
 	}
 
+	function playAudio(audioId) {
+		document.getElementById(audioId).play();
+	}
 
+	function stopAudio(audioId) {
+		var sound = document.getElementById(audioId);
+		sound.removeAttribute("loop");
+		sound.pause();
+		sound.currentTime = 0;
+	}
 
 });

@@ -13,19 +13,37 @@
 <body ng-app="myApp">
 	<div ng-controller="gameCtrl" class="container">
 		<div style="height: 5%;"></div>
-		<div class="col-md-12" style="height:90%;" ng-keyup="keyup($event)" ng-click="keyup()">
-			<div class="game-container">
-				<div ng-repeat="row in level track by $index" class="row-{{$index}}">
-					<div ng-repeat="square in row track by $index">
-						<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 1" class="white dot small col-1 col-{{$index}}-start"></div>
-						<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 2" class="white dot large col-1 col-{{$index}}-start"></div>
-						<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 3" class="blue block col-1 col-{{$index}}-start"></div>
-						<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 4" class="red block gate col-1 col-{{$index}}-start"></div>
+			<div class="col-md-12" style="height:90%;" ng-keyup="keyup($event)" ng-click="keyup()">
+				<div class="game-container">
+					<div class="game-over" hidden>
+						GAME OVER
+						<div style="font-size:14px;margin-top:10px;">PRESS SPACE TO START</div>
+					</div>
+					<div class="winner" hidden>
+						YOU WIN!!
+						<div style="font-size:14px;margin-top:10px;">PRESS SPACE TO START</div>
+					</div>
+					<div ng-repeat="row in level track by $index" class="row-{{$index}}">
+						<div ng-repeat="square in row track by $index">
+							<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 1" class="{{$parent.$index}}-{{$index}} white dot small col-1 col-{{$index}}-start"></div>
+							<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 2" class="{{$parent.$index}}-{{$index}} white dot large col-1 col-{{$index}}-start"></div>
+							<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 3" class="{{$parent.$index}}-{{$index}} blue block col-1 col-{{$index}}-start"></div>
+							<div id="{{$parent.$index}}-{{$index}}" ng-show="square === 4" class="{{$parent.$index}}-{{$index}} red block gate col-1 col-{{$index}}-start"></div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		</div>
 	</div>
+	<!-- audio -->
+	<audio id="pacman-beginning">
+		<source src="./audio/pacman-beginning.wav" type="audio/wav">
+	</audio>
+	<audio loop id="pacman-chomp" loop>
+		<source src="./audio/pacman-chomp.wav" type="audio/wav">
+	</audio>
+	<audio id="pacman-death">
+		<source src="./audio/pacman-death.wav" type="audio/wav">
+	</audio>
 </body>
 </html>
