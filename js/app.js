@@ -143,8 +143,19 @@ app.controller('gameCtrl', function($scope, $document) {
 			if($scope.playing) {
 				
 				updateCharacter($scope.pacman);
+				if(checkForCollision2()) {
+					clearInterval(gameInterval);
+				}
 
 				for(var i=0; i<$scope.ghosts.length; i++) {
+					// check for collision
+					// if(checkForCollision($scope.ghosts[i])) {
+					// 	clearInterval(gameInterval);
+					// }
+					if(checkForCollision2()) {
+						clearInterval(gameInterval);
+					}
+
 					// update ghost position
 					if(!updateCharacter($scope.ghosts[i])) {
 						$scope.ghosts[i].moveState = getRandomMoveState($scope.ghosts[i]);
@@ -156,22 +167,6 @@ app.controller('gameCtrl', function($scope, $document) {
 						}
 					}
 
-					// check for collision
-					if(collision($scope.ghosts[i].id, $scope.pacman.id)) {
-						if(!$scope.superpower) {
-							$scope.playing = false;
-							stopAudio("pacman-chomp");
-							playAudio("pacman-death");
-							clearInterval(gameInterval);
-							$("#pacman").attr("src", "./img/pacmandie.gif");
-							$(".game-over").show();
-						}
-						else {
-							playAudio("pacman-chomp-ghost");
-							$("#" + $scope.ghosts[i].id).remove();
-							generateGhost(i+1, $scope.ghosts[i]);
-						}
-					}
 				}
 				checkForWinner(function() {
 					$scope.playing = false;
@@ -181,6 +176,48 @@ app.controller('gameCtrl', function($scope, $document) {
 				});
 			}
 		}, 250);
+	}
+
+	function checkForCollision2() {
+		// check for collision
+		for(var i=0; i<$scope.ghosts.length; i++) {
+			if(collision($scope.ghosts[i].id, $scope.pacman.id)) {
+				if(!$scope.superpower) {
+					$scope.playing = false;
+					stopAudio("pacman-chomp");
+					playAudio("pacman-death");
+					$("#pacman").attr("src", "./img/pacmandie.gif");
+					$(".game-over").show();
+					return true;
+				}
+				else {
+					playAudio("pacman-chomp-ghost");
+					$("#" + $scope.ghosts[i].id).remove();
+					generateGhost($scope.ghosts[i].id, $scope.ghosts[i]);
+				}
+			}
+		}
+		return false;
+	}
+
+	function checkForCollision(ghost) {
+		// check for collision
+		if(collision(ghost.id, $scope.pacman.id)) {
+			if(!$scope.superpower) {
+				$scope.playing = false;
+				stopAudio("pacman-chomp");
+				playAudio("pacman-death");
+				$("#pacman").attr("src", "./img/pacmandie.gif");
+				$(".game-over").show();
+				return true;
+			}
+			else {
+				playAudio("pacman-chomp-ghost");
+				$("#" + ghost.id).remove();
+				generateGhost(ghost.id, ghost);
+			}
+		}
+		return false;
 	}
 
 	function loadCharacter(character) {
@@ -196,6 +233,7 @@ app.controller('gameCtrl', function($scope, $document) {
 	}
 
 	function generateGhost(ghostNumber, ghost) {
+		console.log("generating ghost!!");
 
 		var numSeconds = Math.floor((Math.random() * 4) + 2);
 
