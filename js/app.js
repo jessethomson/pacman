@@ -169,7 +169,7 @@ app.controller('gameCtrl', function($scope, $document) {
 						else {
 							playAudio("pacman-chomp-ghost");
 							$("#" + $scope.ghosts[i].id).remove();
-							//generateGhost()
+							generateGhost(i+1, $scope.ghosts[i]);
 						}
 					}
 				}
@@ -200,19 +200,21 @@ app.controller('gameCtrl', function($scope, $document) {
 		var numSeconds = Math.floor((Math.random() * 4) + 2);
 
 		setTimeout(function() {
-			var id = "ghost" + $scope.ghosts.length;
-			var ghost = {
-				id: id,
-				img: "ghost" + ghostNumber + ".gif",
-				x: 9,
-				y: 9,
-				moveState: "up"
+			if(!ghost) {			
+				var id = "ghost" + $scope.ghosts.length;
+				ghost = {
+					id: id,
+					img: "ghost" + ghostNumber + ".gif",
+					moveState: "up"
+				}
 			}
 
 			loadCharacter(ghost);
+			ghost.x = 9;
+			ghost.y = 9;
 
 			// initialize ghost position
-			var pacman = $("#" + id)
+			var pacman = $("#" + ghost.id)
 			pacman.css("left", ghost.x * 25 + "px");
 			pacman.css("top", ghost.y * 25 + "px");
 
@@ -243,6 +245,15 @@ app.controller('gameCtrl', function($scope, $document) {
 
 	$scope.startGame();
 
+	function loadGhostImages(path) {
+		var newPath = path;
+		for(var i=0; i<$scope.ghosts.length; i++) {
+			console.log("original path: ")
+			var path = newPath || $scope.ghosts[i].img;
+			$("#"+$scope.ghosts[i].id).attr("src", "./img/" + path);
+		}
+	}
+
 	function updateCharacter(character) {
 		var level = $scope.level;
 		var moved = false;
@@ -259,12 +270,14 @@ app.controller('gameCtrl', function($scope, $document) {
 			$scope.level[character.y][character.x] = 0;
 			$("." + character.y + "-" + character.x).hide();
 			$scope.superpower = true;
+			loadGhostImages("ghost1.gif");
 			stopAudio("pacman-chomp");
 			playAudio("pacman-cherry");
 			$("#pacman-cherry").bind("ended", function() {
 				playAudio("pacman-siren");
 			})
 			setTimeout(function() {
+				loadGhostImages();
 				stopAudio("pacman-siren");
 				playAudio("pacman-chomp");
 				$scope.superpower = false;
