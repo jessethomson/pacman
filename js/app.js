@@ -308,7 +308,7 @@ app.controller('gameCtrl', function($scope, $document) {
 			$scope.level[character.y][character.x] = 0;
 			$("." + character.y + "-" + character.x).hide();
 			$scope.superpower = true;
-			loadGhostImages("ghost1.gif");
+			loadGhostImages("ghostchange.gif");
 			stopAudio("pacman-chomp");
 			playAudio("pacman-cherry");
 			$("#pacman-cherry").bind("ended", function() {
