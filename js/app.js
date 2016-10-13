@@ -167,6 +167,7 @@ app.controller('gameCtrl', function($scope, $document) {
 							$(".game-over").show();
 						}
 						else {
+							playAudio("pacman-chomp-ghost");
 							$("#" + $scope.ghosts[i].id).remove();
 							//generateGhost()
 						}
@@ -258,7 +259,14 @@ app.controller('gameCtrl', function($scope, $document) {
 			$scope.level[character.y][character.x] = 0;
 			$("." + character.y + "-" + character.x).hide();
 			$scope.superpower = true;
+			stopAudio("pacman-chomp");
+			playAudio("pacman-cherry");
+			$("#pacman-cherry").bind("ended", function() {
+				playAudio("pacman-siren");
+			})
 			setTimeout(function() {
+				stopAudio("pacman-siren");
+				playAudio("pacman-chomp");
 				$scope.superpower = false;
 			}, 8000);
 		}
