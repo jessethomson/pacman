@@ -354,7 +354,7 @@ app.controller('gameCtrl', function($scope, $document) {
 
 	function stopAudio(audioId) {
 		var sound = document.getElementById(audioId);
-		sound.removeAttribute("loop");
+		//sound.removeAttribute("loop");
 		sound.pause();
 		sound.currentTime = 0;
 	}
