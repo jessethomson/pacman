@@ -233,7 +233,6 @@ app.controller('gameCtrl', function($scope, $document) {
 	}
 
 	function generateGhost(ghostNumber, ghost) {
-		console.log("generating ghost!!");
 
 		var numSeconds = Math.floor((Math.random() * 4) + 2);
 
@@ -286,7 +285,6 @@ app.controller('gameCtrl', function($scope, $document) {
 	function loadGhostImages(path) {
 		var newPath = path;
 		for(var i=0; i<$scope.ghosts.length; i++) {
-			console.log("original path: ")
 			var path = newPath || $scope.ghosts[i].img;
 			$("#"+$scope.ghosts[i].id).attr("src", "./img/" + path);
 		}
